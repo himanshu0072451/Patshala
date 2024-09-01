@@ -1,0 +1,52 @@
+# Node.js (Backend and Frontend)
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Environment Variables
+.env
+/Frontend/.env
+/Backend/.env
+
+# Build directories
+build/
+dist/
+/Frontend/build/
+/Frontend/dist/
+/Backend/build/
+/Backend/dist/
+
+# OS and IDE generated files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# React specific
+/Frontend/.cache/
+/Frontend/.yarn/
+/Frontend/.pnp.*
+
+# Firebase Admin SDK service account key
+/Backend/patshala-c5084-firebase-adminsdk-3mjf7-9408ee6c23.json
+
+# Student Data
+/Backend/StudentData.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Coverage directory
+coverage/
+
+# Other private files
+data/
+credentials.json
