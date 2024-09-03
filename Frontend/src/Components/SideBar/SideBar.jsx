@@ -43,7 +43,7 @@ const SideBar = ({ menuClick, setMenuClick, notify }) => {
     { name: "Home", path: "/" },
     { name: "Notes", path: "/notes" },
     { name: "Syllabus", path: "/" },
-    { name: "PYQ", path: "/" },
+    { name: "PYQ", path: "/PYQ" },
     userRole === "teacher" && { name: "Upload Notes", path: "/upload-notes" },
   ].filter(Boolean);
 

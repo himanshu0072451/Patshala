@@ -20,6 +20,8 @@ import Notes from "./Components/Notes/Notes";
 import NavBar from "./Components/NavBar/NavBar";
 import SideBar from "./Components/SideBar/SideBar";
 import UploadNotes from "./Components/Notes/UploadNotes/UploadNotes";
+import Pyq from "./Components/Notes/Pyq";
+
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // Initially null to indicate loading state
@@ -126,6 +128,7 @@ const App = () => {
               element={<OtpVerification notify={notify} />}
             />
             <Route path="/notes" element={<Notes notify={notify} />} />
+            <Route path="/PYQ" element={<Pyq notify={notify} />} />
             <Route
               path="/upload-notes"
               element={

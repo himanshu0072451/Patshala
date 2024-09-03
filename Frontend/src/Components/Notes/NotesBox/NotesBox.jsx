@@ -108,6 +108,7 @@ const NotesBox = ({ name, imgPath, title, fileUrl, viewUrl, isMobile }) => {
             <div className="mob-btns relative overflow-hidden w-full md:w-1/2 flex justify-start md:justify-end items-center gap-2">
               <NavLink
                 to={viewUrl}
+                target="_blank"
                 className="text-sm font-[400] h-7 w-[4rem] flex justify-center items-center px-2 py-1 rounded-full border-[1px] border-zinc-100 text-white"
               >
                 View

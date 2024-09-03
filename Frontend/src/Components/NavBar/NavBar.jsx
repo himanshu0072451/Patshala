@@ -13,7 +13,7 @@ const NavBar = ({ setMenuClick }) => {
   const isMobile = useMediaQuery("(min-width: 768px)");
 
   const location = useLocation();
-  const notes = location.pathname === "/notes";
+  const notes = location.pathname === "/notes" && "/PYQ";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,7 +103,7 @@ const NavBar = ({ setMenuClick }) => {
         </div>
         <div className="txt">
           <h1 className="text-sm font-['Helvetica']">
-            {notes && "Explore Your Study Materials"}
+            {notes ? "Explore Your Study Materials" : "Retro Papers: PYQs at Your Fingertips"}
           </h1>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { VscFileCode } from "react-icons/vsc";
 import { LiaDigitalTachographSolid } from "react-icons/lia";
 import { GrCloudComputer } from "react-icons/gr";
 
-const Notes = () => {
+const Pyq = () => {
   const subjects = [
     { name: "All", icon: <HiMiniCubeTransparent /> },
     {
@@ -30,20 +30,15 @@ const Notes = () => {
       icon: <LiaDigitalTachographSolid />,
       imgPath: "./NotesSub/DTE.png",
     },
-    {
-      name: "CGR",
-      icon: <GrCloudComputer />,
-      imgPath: "./NotesSub/CGR.jpeg",
-    },
   ];
 
   return (
     <ContentSection
-      title="Explore Your Study Materials"
-      type="notes"
+      title="Prep Like a Pro: PYQs at Your Fingertips"
+      type="pyq"
       subjects={subjects}
     />
   );
 };
 
-export default Notes;
+export default Pyq;
