@@ -1,7 +1,7 @@
 const Note = require("../models/Note");
+const Pyq = require("../models/Pyq");
 const bucket = require("../config/firebaseConfig");
 const path = require("path");
-const fs = require("fs");
 
 exports.createNote = async (req, res) => {
   try {
@@ -85,20 +85,34 @@ exports.createNote = async (req, res) => {
   }
 };
 
-exports.getNotes = async (req, res) => {
+exports.getContent = async (req, res) => {
   try {
-    const { subject } = req.query;
+    const { type, subject } = req.query;
+
+    if (!type) {
+      return res.status(400).json({ error: "Type is required" });
+    }
+
+    // Initialize an empty query object
     const query = {};
 
-    if (subject) {
+    // Apply subject filter if not "All"
+    if (subject && subject !== "All") {
       query.subject = subject;
     }
 
-    const notes = await Note.find(query);
+    let content;
+    if (type === "notes") {
+      content = await Note.find(query);
+    } else if (type === "pyq") {
+      content = await Pyq.find(query);
+    } else {
+      return res.status(400).json({ error: "Invalid content type" });
+    }
 
-    res.status(200).json({ notes });
+    res.status(200).json({ content });
   } catch (error) {
-    console.error("Error retrieving notes:", error);
+    console.error("Error retrieving content:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

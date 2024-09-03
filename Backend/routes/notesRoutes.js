@@ -17,6 +17,9 @@ router.post(
 );
 
 // Route to get notes (accessible by everyone)
-router.get("/notes", notesController.getNotes);
+// router.get("/notes", notesController.getContent);
+
+router.get("/content", notesController.getContent);
+
 
 module.exports = router;
