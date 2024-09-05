@@ -20,7 +20,7 @@ const NotesBox = ({ name, imgPath, title, fileUrl, viewUrl, isMobile }) => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className={`main ${
         isSmMobile && "h-fit w-[11rem]"
-      } sm:h-fit sm:w-[10rem] md:h-fit md:w-[13rem] lg:h-[20rem] lg:w-[22rem] font-[Satoshi] rounded-md relative`}
+      } h-[18rem] w-full sm:h-fit sm:w-[10rem] md:h-fit md:w-[13rem] lg:h-[20rem] lg:w-[22rem] font-[Satoshi] rounded-md relative`}
     >
       <div className="main-wrap h-full w-full flex flex-col justify-center items-center gap-2">
         <div className="left w-full h-[75%] lg:h-[82%] rounded-md overflow-hidden">
