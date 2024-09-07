@@ -29,6 +29,7 @@ const TeacherRegister = ({ notify }) => {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [activeInput, setActiveInput] = useState("");
+  const [isNameFieldDisabled, setIsNameFieldDisabled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,6 +65,7 @@ const TeacherRegister = ({ notify }) => {
 
       if (currentStep === 3) {
         const teacherIdValue = getValues("teacherId");
+        setIsNameFieldDisabled(false);
         if (teacherIdValue) {
           const isTeacherIdValid = await checkFieldExistence(
             "teacherId",
@@ -81,6 +83,7 @@ const TeacherRegister = ({ notify }) => {
       });
 
       setCurrentStep(currentStep + 1);
+      setIsNameFieldDisabled(true);
     }
   };
 
@@ -88,65 +91,68 @@ const TeacherRegister = ({ notify }) => {
 
   const checkFieldExistence = async (field, value) => {
     try {
+      const name = getValues("name");
+
       const response = await axios.get(
-        `http://localhost:5000/api/teachers/check-${field}/${value}`
+        `http://localhost:5000/api/teachers/check-${field}/${value}`,
+        {
+          params: {
+            name,
+          },
+        }
       );
-      // console.log(`Response for ${field}:`, response); Debug Purpose!
 
       if (response.data.exists) {
-        notify(
-          `${field.charAt(0).toUpperCase() + field.slice(1)} already exists!`,
-          "error"
-        );
-        setError(field, {
-          type: "manual",
-          message: `${
-            field.charAt(0).toUpperCase() + field.slice(1)
-          } already exists`,
-        });
-        return;
-      } else if (response.status === 409) {
-        notify(
-          `${field.charAt(0).toUpperCase() + field.slice(1)} already exists!`,
-          "error"
-        );
-        setError(field, {
-          type: "manual",
-          message:
-            response.data.message ||
-            `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
-        });
-        return false;
+        if (response.data.proceed) {
+          // TeacherID and name match, proceed with login or registration
+          notify(response.data.message, "success");
+          setIsNameFieldDisabled(true);
+          return true;
+        } else {
+          // TeacherID exists, but the name does not match
+          notify(response.data.message, "error");
+          setError("name", {
+            type: "manual",
+            message: response.data.message,
+          });
+          // Enable the name field and reset to the first step
+          setIsNameFieldDisabled(false);
+          setCurrentStep(0);
+          return false;
+        }
       }
+
+      // TeacherID does not exist
+      return true;
     } catch (error) {
-      // console.error(`Error checking ${field}:`, error);
       if (error.response) {
         if (error.response.status === 409) {
-          notify(
-            `${field.charAt(0).toUpperCase() + field.slice(1)} already exists!`,
-            "error"
-          );
+          // Conflict: TeacherID exists but name mismatch
+          notify(error.response.data.message, "error");
           setError(field, {
             type: "manual",
-            message:
-              error.response.data.message ||
-              `${
-                field.charAt(0).toUpperCase() + field.slice(1)
-              } already exists`,
+            message: error.response.data.message,
+          });
+        } else if (error.response.status === 404) {
+          // TeacherID does not exist
+          notify(error.response.data.message, "error");
+          setError(field, {
+            type: "manual",
+            message: error.response.data.message,
           });
         } else {
+          // Other server-side errors
           notify(
-            `An error occurred while checking ${field}. Please try again.`,
+            `Server error: ${error.response.data.message || "Unknown error"}`,
             "error"
           );
           setError(field, {
             type: "manual",
-            message:
-              error.response.data.message ||
-              `An error occurred while checking ${field}. Please try again.`,
+            message: error.response.data.message || "Unknown server error.",
           });
         }
       } else {
+        // Network or other errors
         notify("Network error. Please try again.", "error");
         setError(field, {
           type: "manual",
@@ -155,10 +161,10 @@ const TeacherRegister = ({ notify }) => {
       }
       return false;
     }
-    return true;
   };
 
   const onSubmit = async (data) => {
+    console.log("Data: ", data.subjects);
     const subjectsArray = data.subjects
       .split(",")
       .map((subject) => subject.trim());
@@ -228,7 +234,7 @@ const TeacherRegister = ({ notify }) => {
                     onClick={() => handleInputClick("name")}
                     showButton={currentStep === 0 || activeInput === "name"}
                     handleContinue={handleContinue}
-                    disabled={currentStep > 0}
+                    disabled={isNameFieldDisabled}
                   />
                 )}
                 {currentStep >= 1 && (
