@@ -35,7 +35,7 @@ router.post(
 router.get("/check-email/:email", teacherController.checkEmail);
 
 // Check if teacher ID exists
-router.get("/check-teacherId/:teacherId", teacherController.checkTeacherId);
+router.get("/check-teacherId/:teacherId", teacherController.checkEnrollmentID);
 
 // Forgot Password
 router.post(

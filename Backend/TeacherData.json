@@ -1,0 +1,26 @@
+[
+  {
+    "num": "1",
+    "branch": "CW",
+    "enrollment": "PolyT001",
+    "name": "Prashant Tarone"
+  },
+  {
+    "num": "2",
+    "branch": "CW",
+    "enrollment": "PolyT002",
+    "name": "Priyanka Narad "
+  },
+  {
+    "num": "3",
+    "branch": "CW",
+    "enrollment": "PolyT003",
+    "name": "Nikita Dahat "
+  },
+  {
+    "num": "4",
+    "branch": "CW",
+    "enrollment": "PolyT004",
+    "name": "Payal Bhute"
+  }
+]

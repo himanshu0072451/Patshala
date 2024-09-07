@@ -1,11 +1,10 @@
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const { validationResult } = require("express-validator");
 const Teacher = require("../models/Teacher");
-const Student = require("../models/Student");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
 const {
   hashPassword,
   comparePassword,
@@ -15,6 +14,7 @@ const {
   checkEmailExists,
   checkIdExists,
   generateResetToken,
+  isEnrollNumExists,
 } = require("../utils/authUtils");
 
 // Register a new teacher
@@ -24,7 +24,7 @@ exports.registerTeacher = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, teacherId } = req.body;
+  const { name, email, password, teacherId, subjects } = req.body;
 
   try {
     // Check if email already exists
@@ -39,8 +39,8 @@ exports.registerTeacher = async (req, res) => {
     const teacher = new Teacher({
       name,
       email,
-      password: hashPassword,
-      teacherDetails: { teacherId },
+      password: hashedPassword,
+      teacherDetails: { teacherId, subjects },
       registrationDate: new Date(),
     });
 
@@ -176,30 +176,63 @@ exports.checkEmail = async (req, res) => {
   }
 };
 
-// Check if teacher ID already exists
-exports.checkTeacherId = async (req, res) => {
+exports.checkEnrollmentID = async (req, res) => {
   const { teacherId } = req.params;
-  try {
-    const idCheck = await checkIdExists(teacherId);
+  const { name } = req.query;
 
+  try {
+    const filePath = path.join(__dirname, "../TeacherData.json");
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    const teachersData = JSON.parse(fileContent);
+
+    // Check if the enrollment ID exists and if the name matches
+    const idCheck = await checkIdExists(teacherId);
+    const enrollCheck = isEnrollNumExists(teacherId, teachersData, name);
+    console.log(idCheck);
     if (idCheck.exists) {
       if (idCheck.role === "student") {
         return res.status(409).json({
-          message: "ID already exists as a student ID, use teacherID!",
+          message:
+            "ID already exists as a student ID. Please use a different enrollment ID.",
           exists: true,
         });
-      } else {
-        return res.json({
-          message: "ID already exists, use different!",
+      } else if (idCheck.role === "student") {
+        return res.status(409).json({
+          message:
+            "ID already exists in database as a teacher ID. Please use a different enrollment ID.",
           exists: true,
         });
       }
-    } else {
-      return res.json({ exists: false });
     }
+    if (enrollCheck.exists) {
+      if (enrollCheck.message === "Enrollment number and name match.") {
+        return res.json({
+          message: "Enrollment number and name match. Proceed with login.",
+          exists: true,
+          proceed: true,
+        });
+      } else {
+        // Name does not match, but enrollment exists
+        return res.status(409).json({
+          message: enrollCheck.message,
+          exists: true,
+          proceed: false,
+        });
+      }
+    }
+
+    // Enrollment ID does not exist
+    return res.status(404).json({
+      message: "Enrollment ID does not exist.",
+      exists: false,
+      proceed: false,
+    });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    console.error("Error checking enrollment ID:", err.message);
+    return res.status(500).json({
+      message: "Server error while checking enrollment ID.",
+      error: err.message,
+    });
   }
 };
 
