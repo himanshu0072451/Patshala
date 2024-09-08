@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
-import { delay, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import ButtonAnimation from "../AnimationButton/ButtonAnimation";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode"; // Correct import for jwt-decode
+import { jwtDecode } from "jwt-decode";
 
 const SideBar = ({ menuClick, setMenuClick, notify }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
@@ -38,13 +38,18 @@ const SideBar = ({ menuClick, setMenuClick, notify }) => {
       setIsDisplayed(true);
     }
   }, [menuClick]);
-  // Define menu items based on user role
+
   const Data = [
     { name: "Home", path: "/" },
     { name: "Notes", path: "/notes" },
     { name: "Syllabus", path: "/" },
     { name: "PYQ", path: "/PYQ" },
     userRole === "teacher" && { name: "Upload Notes", path: "/upload-notes" },
+    {
+      name: "Dashboard",
+      path:
+        userRole === "teacher" ? "/teacher/dashboard" : "/student/dashboard",
+    },
   ].filter(Boolean);
 
   useEffect(() => {
@@ -54,7 +59,6 @@ const SideBar = ({ menuClick, setMenuClick, notify }) => {
   return (
     <motion.div
       initial={{ left: "-100%" }}
-      // animate={{ left: menuClick ? "1.5rem" : "-100%" }}
       animate={{ left: menuClick ? "0" : "-100%" }}
       transition={{
         duration: 0.9,
@@ -68,7 +72,6 @@ const SideBar = ({ menuClick, setMenuClick, notify }) => {
       style={{
         display: isDisplayed || menuClick ? "flex" : "none",
       }}
-      // SideBar bg-red-950 fixed top-0 h-full flex justify-center items-center w-[32rem] font-[Satoshi] z-[999]
       className="SideBar fixed top-0 h-full w-full lg:w-[35rem] font-[Satoshi] z-[999] px-4 lg:pl-[1.5rem] overflow-y-auto"
     >
       <div className="Sidebar-main min-h-full w-full lg:w-[32rem] flex justify-center items-center">
