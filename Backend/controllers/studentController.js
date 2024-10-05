@@ -19,7 +19,7 @@ const {
 
 // Register student
 exports.registerStudent = async (req, res) => {
- const errors = validationResult(req);
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
@@ -85,7 +85,11 @@ exports.loginStudent = async (req, res) => {
     // Generate JWT token if student is active
     if (student.isActive) {
       const payload = {
-        user: { id: student.id, email: student.email, role: "student" },
+        user: {
+          id: student.studentDetails.studentId,
+          email: student.email,
+          role: "student",
+        },
       };
       const token = generateToken(payload, "1h");
 
@@ -392,7 +396,7 @@ exports.verifyOtp = async (req, res) => {
   try {
     // Verify the JWT token
     const decoded = jwt.verify(token, config.get("jwtSecret"));
-    console.log(decoded.email)
+    console.log(decoded.email);
     const student = await Student.findOne({ email: decoded.email });
 
     if (!student) {
