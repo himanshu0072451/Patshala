@@ -92,7 +92,7 @@ exports.loginTeacher = async (req, res) => {
     if (teacher.isActive) {
       const payload = {
         user: {
-          id: teacher.id,
+          id: teacher.teacherDetails.teacherId,
           email: teacher.email,
           role: "teacher",
         },
@@ -532,5 +532,15 @@ exports.resendOtp = async (req, res) => {
 
     // Generic server error
     return res.status(500).send("Server error");
+  }
+};
+
+// Get list of all teachers
+exports.GetAllTeacher = async (req, res) => {
+  try {
+    const teachers = await Teacher.find({}, "name email teacherDetails");
+    res.json(teachers);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve teachers" });
   }
 };
