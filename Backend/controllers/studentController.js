@@ -88,6 +88,7 @@ exports.loginStudent = async (req, res) => {
         user: {
           id: student.studentDetails.studentId,
           email: student.email,
+          name: student.name,
           role: "student",
         },
       };

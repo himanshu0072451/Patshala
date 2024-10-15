@@ -94,6 +94,7 @@ exports.loginTeacher = async (req, res) => {
         user: {
           id: teacher.teacherDetails.teacherId,
           email: teacher.email,
+          name: teacher.name,
           role: "teacher",
         },
       };
