@@ -104,3 +104,4 @@ const SideBar = ({ menuClick, setMenuClick, notify }) => {
   );
 };
 export default SideBar;
+
